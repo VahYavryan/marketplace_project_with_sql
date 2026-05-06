@@ -7,5 +7,5 @@ CREATE TABLE analytics._stg_geolocation (
 );
 
 COPY analytics._stg_geolocation 
-FROM '/docker-entrypoint-initdb.d/Data/olist_geolocation_dataset.csv' 
+FROM '/data/olist_geolocation_dataset.csv' 
 DELIMITER ',' CSV HEADER;

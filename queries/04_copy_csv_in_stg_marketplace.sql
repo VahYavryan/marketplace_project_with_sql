@@ -9,7 +9,7 @@ COPY analytics._stg_marketplace (
     order_estimated_delivery_date, day_of_purchase, month_of_purchase, year_of_purchase, 
     "month/year_of_purchase", order_status, order_unique_id
 )
-FROM '/docker-entrypoint-initdb.d/Data/marketplace_project/marketplace_clean.csv'
+FROM '/data/marketplace_clean.csv'
 DELIMITER ','
 CSV HEADER
 NULL '';

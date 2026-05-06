@@ -1,4 +1,4 @@
-CREATE TABLE core.dim_geolocation AS
+CREATE TABLE analytics.dim_geolocation AS
 SELECT DISTINCT ON (geolocation_zip_code_prefix)
     geolocation_zip_code_prefix AS zip_code_prefix,
     AVG(geolocation_lat) OVER(PARTITION BY geolocation_zip_code_prefix) AS latitude,
@@ -8,4 +8,4 @@ SELECT DISTINCT ON (geolocation_zip_code_prefix)
 FROM analytics._stg_geolocation
 ORDER BY geolocation_zip_code_prefix, geolocation_city; 
 
-ALTER TABLE core.dim_geolocation ADD PRIMARY KEY (zip_code_prefix);
+ALTER TABLE analytics.dim_geolocation ADD PRIMARY KEY (zip_code_prefix);
