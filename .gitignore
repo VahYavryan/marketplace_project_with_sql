@@ -8,7 +8,6 @@ passwords.txt
 
 # Large Data files
 data/*.csv
-data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
