@@ -66,3 +66,22 @@ This table stores unique sellers information, including their geographic locatio
 | **Least Customers** | 📍 Monteiro Lobato | 1 |
 
 ---
+
+## 🔭 Fact Order Insight (`fact_orders`)
+
+---
+
+## 📐 Design Decisions & Spatial Architecture
+
+### 1. Normalization & Schema Strategy
+
+The database is modeled using a **Star Schema** optimized for analytical performance:
+
+- **Fact Table:** `analytics.fact_orders` contains transactional grains (price, freight, timestamps).
+  
+- **Dimension Tables:** `dim_customers`, `dim_products`, `dim_sellers`, and `dim_geolocation` isolate descriptive attributes, enforcing referential integrity.
+
+### 2. Spatial Modeling (PostGIS)
+
+- Transformed raw coordinates into native spatial objects using `GEOMETRY(Point, 4326)`.
+- Indexed geography columns using **GiST indexes** (`idx_geolocation_geom`) to optimize spatial joins (`ST_Distance`) and geometric calculations.
