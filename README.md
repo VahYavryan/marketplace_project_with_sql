@@ -69,6 +69,26 @@ This table stores unique sellers information, including their geographic locatio
 
 ## 🔭 Fact Order Insight (`fact_orders`)
 
+This central fact table forms the core of the star schema, capturing granular transactional data for every marketplace order line item. It serves as the primary foundation for generating business intelligence and tracking key performance indicators (KPIs).
+
+### 📔 Key Metrics
+
+- **Primary/Composite Key:** Combined grain of `order_id` and `order_item_id` to ensure absolute record uniqueness.
+- **Transactional Grains:** Tracks numerical financial dimensions including `price` and `freight_value` for exact financial auditing.
+- **Temporal Dimensions:** Stores critical operational milestones such as `order_purchase_timestamp`, `order_approved_at`, `order_delivered_carrier_date`, and `order_delivered_customer_date` to monitor fulfillment lifecycle pipelines.
+
+---
+
+## 📊 Advanced SQL Queries
+
+### 1. Window Function: Monthly Revenue Growth Trends and Running Total
+
+This analytical query performs time-series financial analysis directly within the database. It leverages PostgreSQL Window Functions to aggregation-level sales data, tracks how monthly revenue changes over time, and calculates the exact Month-over-Month (MoM) growth percentage alongside the cumulative business revenue (Running Total) to evaluate corporate scaling velocity.
+
+### 2. Spatial Analytics: Inter-State Delivery Distance and Fulfillment Metrics
+
+Leveraging PostGIS spatial computing capabilities, this query dynamically measures the exact geodesic distance in kilometers between cross-functional network nodes. By linking customer and seller geospatial points via spatial queries, it calculates the average fulfillment distance per state to identify logistics bottlenecks and optimize supply chain distribution networks.
+
 ---
 
 ## 📐 Design Decisions & Spatial Architecture
