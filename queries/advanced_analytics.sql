@@ -36,4 +36,43 @@ ORDER BY total_orders DESC
 LIMIT 10;
 
 
-	
+--- RFM Segmentation
+WITH customer_rfm AS (
+	SELECT
+		customer_id,
+		-- Recency
+		(SELECT MAX(order_purchase_timestamp) FROM analytics.fact_orders) :: date - MAX(order_purchase_timestamp)::date AS recency,
+		-- Frequency
+		COUNT(DISTINCT order_id) AS frequency,
+		-- Monetary
+		ROUND(SUM(price)::numeric, 2) AS monetary
+		FROM analytics.fact_orders
+		GROUP BY customer_id
+),
+rfm_scores AS (
+	SELECT
+		customer_id,
+        recency,
+        frequency,
+        monetary,
+		-- 1-ից 5 միավորների բաշխում
+		NTILE(5) OVER (ORDER BY recency DESC) AS r_score,
+		NTILE(5) OVER (ORDER BY frequency) AS f_score,
+		NTILE(5) OVER (ORDER BY monetary) AS m_score
+	FROM customer_rfm
+)
+SELECT
+	customer_id,
+    recency,
+    frequency,
+    monetary,
+    (r_score * 100 + f_score * 10 + m_score) AS rfm_combined_score,
+    CASE 
+        WHEN r_score >= 4 AND f_score >= 4 AND m_score >= 4 THEN 'VIP Power User'
+        WHEN r_score <= 2 AND f_score >= 3 THEN 'At Risk / Drifting Account'
+        WHEN r_score >= 4 AND f_score = 1 THEN 'New Customer'
+        WHEN r_score <= 1 AND f_score <= 2 THEN 'Churned Customer'
+        ELSE 'Regular Customer'
+    END AS customer_segment
+FROM rfm_scores
+ORDER BY monetary DESC;

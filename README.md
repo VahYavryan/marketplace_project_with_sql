@@ -1,4 +1,33 @@
-# 🏬 Marketplace Project
+# 🛒 E-Commerce Marketplace SQL & Spatial Analytics Portfolio
+
+This repository showcases a production-grade relational database infrastructure and analytical pipeline built to transform, clean, and model multi-region e-commerce marketplace transactions.
+
+The primary objective of this project is to migrate unstructured transactional logs into an optimized database architecture capable of executing advanced business intelligence reporting and complex spatial computations.
+
+## 🎯 Project Overview
+
+The project processes large-scale retail datasets containing complex consumer purchasing behavior, logistics lifecycles, and geographical distribution nodes.
+
+By implementing an end-to-end data engineering pipeline, the system extracts raw operational profiles and loads them into a centralized data warehouse engine.
+
+---
+
+## 📐 Design Decisions & Spatial Architecture
+
+### 1. Normalization & Schema Strategy
+
+The database is modeled using a **Star Schema** optimized for analytical performance:
+
+- **Fact Table:** `analytics.fact_orders` contains transactional grains (price, freight, timestamps).
+  
+- **Dimension Tables:** `dim_customers`, `dim_products`, `dim_sellers`, and `dim_geolocation` isolate descriptive attributes, enforcing referential integrity.
+
+### 2. Spatial Modeling (PostGIS)
+
+- Transformed raw coordinates into native spatial objects using `GEOMETRY(Point, 4326)`.
+- Indexed geography columns using **GiST indexes** (`idx_geolocation_geom`) to optimize spatial joins (`ST_Distance`) and geometric calculations.
+
+---
 
 ## 📊 Customer Insights (dim_customers)
 
@@ -89,19 +118,10 @@ This analytical query performs time-series financial analysis directly within th
 
 Leveraging PostGIS spatial computing capabilities, this query dynamically measures the exact geodesic distance in kilometers between cross-functional network nodes. By linking customer and seller geospatial points via spatial queries, it calculates the average fulfillment distance per state to identify logistics bottlenecks and optimize supply chain distribution networks.
 
----
+### 3. RFM Segmentation (Recency, Frequency, Monetary)
 
-## 📐 Design Decisions & Spatial Architecture
+This analytical framework segments the user base into actionable behavioral cohorts by quantifying three core transactional dimensions directly from the raw order grain:
 
-### 1. Normalization & Schema Strategy
-
-The database is modeled using a **Star Schema** optimized for analytical performance:
-
-- **Fact Table:** `analytics.fact_orders` contains transactional grains (price, freight, timestamps).
-  
-- **Dimension Tables:** `dim_customers`, `dim_products`, `dim_sellers`, and `dim_geolocation` isolate descriptive attributes, enforcing referential integrity.
-
-### 2. Spatial Modeling (PostGIS)
-
-- Transformed raw coordinates into native spatial objects using `GEOMETRY(Point, 4326)`.
-- Indexed geography columns using **GiST indexes** (`idx_geolocation_geom`) to optimize spatial joins (`ST_Distance`) and geometric calculations.
+- **Recency:** Measures the exact days elapsed since a customer's last purchase relative to the maximum data timeline, isolating active users from drifting ones.
+- **Frequency:** Computes the absolute count of unique, successful invoices generated per consumer to evaluate engagement patterns.
+- **Monetary:** Integrates individual line-item values to determine the exact gross customer lifetime contribution.
